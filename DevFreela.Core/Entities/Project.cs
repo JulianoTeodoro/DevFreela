@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevFreela.Core.Enums;
 
 namespace DevFreela.Core.Entities
 {
@@ -29,7 +30,7 @@ namespace DevFreela.Core.Entities
         public DateTime? StartedAt { get; private set; }
         public DateTime? FinishedAt { get; private set; }
         public ProjectStatusEnum Status { get; set; }
-        public List<ProjectComments> Comments { get; private set;}
+        public List<ProjectComment> Comments { get; private set;}
 
 
     }
