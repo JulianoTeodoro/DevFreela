@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace DevFreela.Infrastructure.CloudServices.Interfaces;
 
-namespace DevFreela.Infrastructure.CloudServices.Interfaces
+public interface IFileStorageService
 {
-    public interface IFileStorageService
-    {
-        void UploadFile(byte[] bytes, string fileName);
-    }
+    void UploadFile(byte[] bytes, string fileName);
 }
