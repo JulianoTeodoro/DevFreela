@@ -1,7 +1,11 @@
+using DevFreela.Application.InputModels.Comment;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Application.ViewModels.Project;
 using DevFreela.Application.InputModels.Project;
+using DevFreela.Core.Entities;
+using DevFreela.Core.Enums;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DevFreela.Application.Services.Implementations
 {
@@ -15,37 +19,88 @@ namespace DevFreela.Application.Services.Implementations
 
         public List<ProjectViewModel> GetAll(string query)
         {
-            throw new NotImplementedException();
+            var projects = _dbContext.Projects.ToList();
+
+            var projectsViewModel = projects
+                .Select(p => new ProjectViewModel(p.Title, p.CreatedAt))
+                .ToList();
+
+            return projectsViewModel;
         }
 
         public ProjectDetailsViewModel GetById(int id)
         {
-            throw new NotImplementedException();
+            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
+
+            if (project == null)
+            {
+                return null;
+            }
+
+            var projectDetailsViewModel = new ProjectDetailsViewModel(
+                project.Id, 
+                project.Title, 
+                project.Description,
+                project.TotalCost,
+                project.CreatedAt,
+                project.FinishedAt
+                );
+
+            return projectDetailsViewModel;
         }
 
         public int Create(NewProjectInputModel inputModel)
         {
-            throw new NotImplementedException();
+            var project = new Project(inputModel.Title, inputModel.Description, inputModel.IdClient, inputModel.IdFreelancer, inputModel.TotalCost);
+
+            _dbContext.Projects.Add(project);
+            _dbContext.SaveChanges();
+            return project.Id;
         }
 
+        public void CreateComment(CreateCommentInputModel inputModel)
+        {
+            var comment = new ProjectComment(inputModel.Content, inputModel.IdProject, inputModel.IdUser);
+            
+            _dbContext.ProjectComments.Add(comment);
+            _dbContext.SaveChanges();
+        }
         public void Update(UpdateProjectInputModel inputModel)
         {
-            throw new NotImplementedException();
+            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == inputModel.Id);
+
+            if (project == null)
+            {
+                return;
+            }
+            
+            project.Update(inputModel.Title, inputModel.Description, inputModel.TotalCost);
+            _dbContext.SaveChanges();
+
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
+
+            project.Cancel();
+            _dbContext.SaveChanges();
         }
 
         public void Start(int id)
         {
-            throw new NotImplementedException();
+            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
+            
+            project.Start();
+            _dbContext.SaveChanges();
         }
 
         public void Finish(int id)
         {
-            throw new NotImplementedException();
+            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
+            
+            project.Finish();
+            _dbContext.SaveChanges();
         }
     }
 }

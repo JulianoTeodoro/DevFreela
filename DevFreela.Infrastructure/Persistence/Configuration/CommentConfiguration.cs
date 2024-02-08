@@ -1,0 +1,26 @@
+﻿using DevFreela.Core.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace DevFreela.Infrastructure.Persistence.Configuration;
+
+public class CommentConfiguration : IEntityTypeConfiguration<ProjectComment>
+{
+    public void Configure(EntityTypeBuilder<ProjectComment> builder)
+    {
+        builder
+            .ToTable("Project_Comments")
+            .HasKey(p => p.Id);
+        
+        builder
+            .HasOne(p => p.Project)
+            .WithMany(p => p.Comments)
+            .HasForeignKey(p => p.IdProject);
+        
+        builder
+            .HasOne(p => p.User)
+            .WithMany(p => p.ProjectComments)
+            .HasForeignKey(p => p.IdUser)
+            .OnDelete(deleteBehavior: DeleteBehavior.Restrict);
+    }
+}

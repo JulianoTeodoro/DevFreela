@@ -7,6 +7,14 @@ namespace DevFreela.Application.InputModels.Project
 {
     public class NewProjectInputModel
     {
+        public NewProjectInputModel(string title, string description, int idClient, int idFreelancer, decimal totalCost)
+        {
+            Title = title;
+            Description = description;
+            IdClient = idClient;
+            IdFreelancer = idFreelancer;
+            TotalCost = totalCost;
+        }
         public string Title { get; set; }
         public string Description { get; set; }
         public int IdClient { get; set; }
