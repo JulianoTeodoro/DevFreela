@@ -144,7 +144,7 @@ namespace DevFreela.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("DevFreela.Core.Entities.UserSkill", b =>
