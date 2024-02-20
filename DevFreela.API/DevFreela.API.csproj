@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.7">
@@ -15,7 +17,7 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <ProjectReference Include="..\DevFreela.Application\DevFreela.Application.csproj" />
-    <ProjectReference Include="..\DevFreela.Core\DevFreela.Core.csproj" />
+    <ProjectReference Include="..\DevFreela.Infrastructure.IOC\DevFreela.Infrastructure.IOC.csproj" />
     <ProjectReference Include="..\DevFreela.Infrastructure\DevFreela.Infrastructure.csproj" />
   </ItemGroup>
 

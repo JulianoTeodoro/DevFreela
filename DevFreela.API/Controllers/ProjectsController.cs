@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevFreela.API.Interfaces;
 using DevFreela.API.Models;
-using DevFreela.Application.InputModels.Comment;
-using DevFreela.Application.InputModels.Project;
+using DevFreela.Application.Commands.Comments;
+using DevFreela.Application.Commands.Projects;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels.Project;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -19,9 +20,12 @@ namespace DevFreela.API.Controllers
     {
 
         private readonly IProjectService _projectService;
-        public ProjectsController(IProjectService projectService)
+        private readonly IMediator _mediator;
+
+        public ProjectsController(IProjectService projectService, IMediator mediator)
         {
             _projectService = projectService;
+            _mediator = mediator;
         }
         
         [HttpGet]
@@ -34,10 +38,10 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ProjectDetailsViewModel> GetById (int id)
+        public async Task<ActionResult<ProjectDetailsViewModel>> GetById (int id)
         {
 
-            var project = _projectService.GetById(id);
+            var project = await _projectService.GetById(id);
 
             if (project == null)
             {
@@ -48,42 +52,50 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post ([FromBody] NewProjectInputModel createProject) {
+        public async Task<IActionResult> Post ([FromBody] CreateProjectCommand createProject) {
             if (createProject.Title.Length > 50) {
                 return BadRequest();
             }
-            
-            var id = _projectService.Create(createProject);
+
+            var id = await _mediator.Send(createProject);
 
             return CreatedAtAction(nameof(GetById), new { Id = id }, createProject);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put (int id, [FromBody] UpdateProjectInputModel updateProject) {
+        public async Task<IActionResult> Put (int id, [FromBody] UpdateProjectCommand updateProject) {
             
             if(updateProject.Description.Length > 200) {
                 return BadRequest();
             }
-            
-            _projectService.Update(updateProject);
+
+            var project = await _mediator.Send(updateProject);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete (int id)
+        public async Task<IActionResult> Delete (int id)
         {
 
-            _projectService.Delete(id);
+            var command = new DeleteProjectCommand(id);
+
+            await _mediator.Send(command);
 
             return NoContent();
         }
 
         [HttpPost("{id}/comments")]
-        public IActionResult PostComment (int id, [FromBody] CreateCommentInputModel createComment) {
-            
-            _projectService.CreateComment(createComment);
-            return NoContent();
+        public async Task<IActionResult> PostComment (int id, [FromBody] CreateCommentCommand createComment) {
+
+            var project = await _projectService.GetById(id);
+
+            if (project == null)
+                return BadRequest("Projeto não encontrado");
+
+            var comment = await _mediator.Send(createComment);
+
+            return CreatedAtAction(nameof(GetById), new { Id = id }, createComment);
         }
 
         [HttpPut("{id}/start")]

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevFreela.API.Models;
+using DevFreela.Application.Services.Interfaces;
+using DevFreela.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
@@ -11,11 +13,18 @@ namespace DevFreela.API.Controllers
     [Route("api/users")]
     public class UsersController : ControllerBase
     {
+        private readonly IUserService _userService;
+        public UsersController(IUserService userService) 
+        { 
+            _userService = userService;
+        }
 
 
         [HttpGet("{id}")]
-        public IActionResult GetById (int id) {
-            return Ok(id);
+        public ActionResult<User> GetById (int id) {
+
+            var user = _userService.GetById(id);
+            return Ok(user);
         }
 
         

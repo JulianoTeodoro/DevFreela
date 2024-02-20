@@ -1,5 +1,4 @@
-﻿using DevFreela.Application.InputModels.Skill;
-using DevFreela.Application.Services.Interfaces;
+﻿using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels.Skill;
 using DevFreela.Core.Entities;
 using DevFreela.Infrastructure.Persistence;
@@ -24,10 +23,4 @@ public class SkillService : ISkillService
         return skillsViewModel;
     }
 
-    public int Create(NewSkillInputModel SkillModel)
-    {
-        var skill = new Skill(SkillModel.Description);
-
-        return 1;
-    }
 }

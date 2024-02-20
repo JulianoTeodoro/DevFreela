@@ -1,20 +1,22 @@
-using DevFreela.Application.InputModels.Comment;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Application.ViewModels.Project;
-using DevFreela.Application.InputModels.Project;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Enums;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
+using MediatR;
 
 namespace DevFreela.Application.Services.Implementations
 {
     public class ProjectService : IProjectService
     {
         private readonly DevFreelaDbContext _dbContext;
+        private readonly IMediator _mediator;
 
-        public ProjectService(DevFreelaDbContext dbContext) {
+        public ProjectService(DevFreelaDbContext dbContext, IMediator mediator) {
             _dbContext = dbContext;
+            _mediator = mediator;
         }
 
         public List<ProjectViewModel> GetAll(string query)
@@ -28,9 +30,13 @@ namespace DevFreela.Application.Services.Implementations
             return projectsViewModel;
         }
 
-        public ProjectDetailsViewModel GetById(int id)
+        public async Task<ProjectDetailsViewModel> GetById(int id)
         {
-            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
+            var project = await _dbContext.Projects
+                .Include(p => p.Freelancer)
+                .Include(p => p.Client)
+                .Include(p => p.Comments)
+                .SingleOrDefaultAsync(p => p.Id == id);
 
             if (project == null)
             {
@@ -42,49 +48,14 @@ namespace DevFreela.Application.Services.Implementations
                 project.Title, 
                 project.Description,
                 project.TotalCost,
-                project.CreatedAt,
-                project.FinishedAt
+                project.StartedAt,
+                project.FinishedAt,
+                project.Client.FullName,
+                project.Freelancer.FullName,
+                project.Comments
                 );
 
             return projectDetailsViewModel;
-        }
-
-        public int Create(NewProjectInputModel inputModel)
-        {
-            var project = new Project(inputModel.Title, inputModel.Description, inputModel.IdClient, inputModel.IdFreelancer, inputModel.TotalCost);
-
-            _dbContext.Projects.Add(project);
-            _dbContext.SaveChanges();
-            return project.Id;
-        }
-
-        public void CreateComment(CreateCommentInputModel inputModel)
-        {
-            var comment = new ProjectComment(inputModel.Content, inputModel.IdProject, inputModel.IdUser);
-            
-            _dbContext.ProjectComments.Add(comment);
-            _dbContext.SaveChanges();
-        }
-        public void Update(UpdateProjectInputModel inputModel)
-        {
-            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == inputModel.Id);
-
-            if (project == null)
-            {
-                return;
-            }
-            
-            project.Update(inputModel.Title, inputModel.Description, inputModel.TotalCost);
-            _dbContext.SaveChanges();
-
-        }
-
-        public void Delete(int id)
-        {
-            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
-
-            project.Cancel();
-            _dbContext.SaveChanges();
         }
 
         public void Start(int id)
