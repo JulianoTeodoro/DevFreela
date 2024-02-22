@@ -6,7 +6,11 @@ using DevFreela.API.Interfaces;
 using DevFreela.API.Models;
 using DevFreela.Application.Commands.Comments;
 using DevFreela.Application.Commands.Projects;
+using DevFreela.Application.Queries.Comments.GetCommentsByIdProjectQuery;
+using DevFreela.Application.Queries.Projects.GetAllProjectsQuery;
+using DevFreela.Application.Queries.Projects.GetProjectByIdQuery;
 using DevFreela.Application.Services.Interfaces;
+using DevFreela.Application.ViewModels.Comment;
 using DevFreela.Application.ViewModels.Project;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +33,10 @@ namespace DevFreela.API.Controllers
         }
         
         [HttpGet]
-        public ActionResult<List<ProjectViewModel>> Get()
+        public async Task<ActionResult<List<ProjectViewModel>>> Get()
         {
 
-            var projects = _projectService.GetAll("projects");
+            var projects = await _mediator.Send(new GetAllProjectsQuery());
 
             return projects;
         }
@@ -41,7 +45,7 @@ namespace DevFreela.API.Controllers
         public async Task<ActionResult<ProjectDetailsViewModel>> GetById (int id)
         {
 
-            var project = await _projectService.GetById(id);
+            var project = await _mediator.Send(new GetProjectByIdQuery(id));
 
             if (project == null)
             {
@@ -85,10 +89,23 @@ namespace DevFreela.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}/comments")]
+        public async Task<ActionResult<List<CommentViewModel>>> GetCommentsByProjectId(int id)
+        {
+            var project = await _mediator.Send(new GetProjectByIdQuery(id));
+
+            if (project == null)
+                return BadRequest("Projeto não encontrado");
+
+            var comments = await _mediator.Send(new GetCommentsByIdProjectQuery(id));
+
+            return comments;
+        }
+
         [HttpPost("{id}/comments")]
         public async Task<IActionResult> PostComment (int id, [FromBody] CreateCommentCommand createComment) {
 
-            var project = await _projectService.GetById(id);
+            var project = await _mediator.Send(new GetProjectByIdQuery(id));
 
             if (project == null)
                 return BadRequest("Projeto não encontrado");

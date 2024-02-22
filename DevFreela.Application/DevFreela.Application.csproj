@@ -16,6 +16,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Queries\" />
+    <Folder Include="Commands\Users\" />
+    <Folder Include="Queries\Comments\GetAllCommentsQuery\" />
+    <Folder Include="Queries\Skills\GetSkillByIdQuery\" />
+    <Folder Include="Queries\Skills\GetAllSkillsQuery\" />
+    <Folder Include="Queries\User\GetUserByIdQuery\" />
+    <Folder Include="Queries\User\GetAllUsersQuery\" />
+    <Folder Include="Queries\User\GetUserSkillByIdQuery\" />
+    <Folder Include="Queries\User\GetUserFreelancerProjectsById\" />
+    <Folder Include="Queries\User\GetUserOwnedProjectsById\" />
   </ItemGroup>
 </Project>

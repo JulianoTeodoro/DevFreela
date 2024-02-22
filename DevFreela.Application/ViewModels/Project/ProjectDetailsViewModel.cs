@@ -1,3 +1,4 @@
+using DevFreela.Application.ViewModels.Comment;
 using DevFreela.Core.Entities;
 
 namespace DevFreela.Application.ViewModels.Project
@@ -5,7 +6,7 @@ namespace DevFreela.Application.ViewModels.Project
     public class ProjectDetailsViewModel
     {
         public ProjectDetailsViewModel(int id, string title, string description, 
-            decimal totalCost, DateTime? startedAt, DateTime? finishedAt, string clientFullName, string freelancerFullName, List<ProjectComment> comments)
+            decimal totalCost, DateTime? startedAt, DateTime? finishedAt, string clientFullName, string freelancerFullName)
         {
             Id = id;
             Title = title;
@@ -15,7 +16,6 @@ namespace DevFreela.Application.ViewModels.Project
             FinishedAt = finishedAt;
             ClientFullName = clientFullName;
             FreelancerFullName = freelancerFullName;
-            Comments = comments;
         }
         public int Id { get; private set; }
         public string Title { get; set; }
@@ -25,7 +25,6 @@ namespace DevFreela.Application.ViewModels.Project
         public DateTime? FinishedAt { get; private set; }
         public string ClientFullName { get; set; }
         public string FreelancerFullName { get; set; }
-        public List<ProjectComment> Comments { get; set; }
 
     }
 }

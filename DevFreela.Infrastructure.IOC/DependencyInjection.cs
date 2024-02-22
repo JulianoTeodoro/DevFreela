@@ -12,6 +12,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using DevFreela.Application.Commands.Projects;
 using DevFreela.Application.Commands.Comments;
+using DevFreela.Application.Queries.Projects.GetAllProjectsQuery;
+using DevFreela.Application.Queries.Projects.GetProjectByIdQuery;
+using DevFreela.Application.Queries.Comments.GetCommentsByIdProjectQuery;
 
 
 namespace DevFreela.Infrastructure
@@ -28,6 +31,10 @@ namespace DevFreela.Infrastructure
             services.AddMediatR(typeof(CreateCommentCommand));
             services.AddMediatR(typeof(DeleteProjectCommand));
             services.AddMediatR(typeof(UpdateProjectCommand));
+
+            services.AddMediatR(typeof(GetAllProjectsQuery));
+            services.AddMediatR(typeof(GetProjectByIdQuery));
+            services.AddMediatR(typeof(GetCommentsByIdProjectQuery));
 
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ISkillService, SkillService>();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DevFreela.Core.Entities
@@ -22,5 +23,10 @@ namespace DevFreela.Core.Entities
         public User User { get; set; }
 
         public DateTime CreatedAt { get; private set; }
+
+        public void Update(string content)
+        {
+            Content = content;
+        }
     }
 }
