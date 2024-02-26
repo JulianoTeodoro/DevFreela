@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="Commands\Users\" />
-    <Folder Include="Queries\Comments\GetAllCommentsQuery\" />
     <Folder Include="Queries\Skills\GetSkillByIdQuery\" />
     <Folder Include="Queries\Skills\GetAllSkillsQuery\" />
     <Folder Include="Queries\User\GetUserByIdQuery\" />
