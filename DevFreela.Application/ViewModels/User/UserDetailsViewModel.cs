@@ -23,7 +23,7 @@ namespace DevFreela.Application.ViewModels.User
         public string FullName { get; private set; }
         public string Email { get; private set; }
         public DateTime BirthDate { get; private set; }
-        public List<SkillViewModel> Skills { get; private set; }
-        public List<ProjectViewModel> FreelancerProjects { get; set; }
+        public List<SkillViewModel>? Skills { get; private set; }
+        public List<ProjectViewModel>? FreelancerProjects { get; set; }
     }
 }

@@ -13,11 +13,9 @@ namespace DevFreela.Application.Services.Implementations
     public class ProjectService : IProjectService
     {
         private readonly DevFreelaDbContext _dbContext;
-        private readonly IMediator _mediator;
 
         public ProjectService(DevFreelaDbContext dbContext, IMediator mediator) {
             _dbContext = dbContext;
-            _mediator = mediator;
         }
 
         public void Start(int id)

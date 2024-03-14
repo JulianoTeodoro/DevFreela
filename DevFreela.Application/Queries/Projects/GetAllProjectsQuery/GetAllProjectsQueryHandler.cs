@@ -22,7 +22,11 @@ namespace DevFreela.Application.Queries.Projects.GetAllProjectsQuery
 
         public async Task<List<ProjectViewModel>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
         {
-            var project = _dbContext.Projects.Include(p => p.Client).Include(p => p.Freelancer).Select(p => new ProjectViewModel(p.Title, p.CreatedAt)).ToList();
+            var project = await _dbContext.Projects
+                .Include(p => p.Client)
+                .Include(p => p.Freelancer)
+                .Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt, p.Client.FullName, p.Freelancer.FullName))
+                .ToListAsync();
             
             return project;
         }

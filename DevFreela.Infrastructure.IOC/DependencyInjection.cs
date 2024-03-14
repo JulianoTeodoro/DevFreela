@@ -17,6 +17,7 @@ using DevFreela.Application.Queries.Projects.GetProjectByIdQuery;
 using DevFreela.Application.Queries.Comments.GetCommentsByIdProjectQuery;
 using DevFreela.Application.Queries.Skills.GetAllSkillsQuery;
 using DevFreela.Application.Queries.Skills.GetSkillByIdQuery;
+using DevFreela.Application.Queries.User.GetUserByIdQuery;
 
 
 namespace DevFreela.Infrastructure
@@ -39,10 +40,9 @@ namespace DevFreela.Infrastructure
             services.AddMediatR(typeof(GetCommentsByIdProjectQuery));
             services.AddMediatR(typeof(GetAllSkillsQuery));
             services.AddMediatR(typeof(GetSkillByIdQuery));
+            services.AddMediatR(typeof(GetUserByIdQuery));
 
             services.AddScoped<IProjectService, ProjectService>();
-            services.AddScoped<ISkillService, SkillService>();
-            services.AddScoped<IUserService, UserService>();
 
             return services;
         }
