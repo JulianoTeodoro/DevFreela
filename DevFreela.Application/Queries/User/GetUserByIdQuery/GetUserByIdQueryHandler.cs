@@ -1,6 +1,7 @@
 ﻿using DevFreela.Application.ViewModels.Project;
 using DevFreela.Application.ViewModels.Skill;
 using DevFreela.Application.ViewModels.User;
+using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,22 +15,21 @@ namespace DevFreela.Application.Queries.User.GetUserByIdQuery
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDetailsViewModel>
     {
-        private readonly DevFreelaDbContext _dbContext;
-        public GetUserByIdQueryHandler(DevFreelaDbContext dbContext)
+        private readonly IUserRepository _repository;
+        public GetUserByIdQueryHandler(IUserRepository repository)
         {
-            _dbContext = dbContext;
+            _repository = repository;
         }
         public async Task<UserDetailsViewModel> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
-                .Include(p => p.FreelanceProjects)
-                .Include(p => p.Skills)
-                .SingleOrDefaultAsync(p => p.Id == request.Id);
+            var user = await _repository.GetById(request.Id);
 
-            var skills = await _dbContext.UserSkills.Where(p => p.IdUser == request.Id).Include(p => p.Skill).Select(p => new SkillViewModel(p.Skill.Id, p.Skill.Description)).ToListAsync();
+            var skills = await _repository.GetSkillAsync(request.Id);
             var projects = user.FreelanceProjects.Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt)).ToList();
 
-            var userViewModel = new UserDetailsViewModel(user.FullName, user.Email, user.BirthDate, skills, projects);
+            var skillViewModel = skills.Select(p => new SkillViewModel(p.Skill.Id, p.Skill.Description)).ToList();
+
+            var userViewModel = new UserDetailsViewModel(user.FullName, user.Email, user.BirthDate, skillViewModel, projects);
 
             return userViewModel;
         }

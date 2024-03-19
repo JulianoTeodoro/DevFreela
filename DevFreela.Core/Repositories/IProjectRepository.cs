@@ -2,10 +2,15 @@
 
 namespace DevFreela.Core.Repositories;
 
-public interface IProjectRepository
+public interface IProjectRepository : IRepository<Project>
 {
-    void Create(Project project);
-    void Update(Project project);
-    void Delete(int id);
-    
+    Task Start(int id);
+    Task Finish(int id);
+    Task<ProjectComment> CreateComment(ProjectComment project);
+    Task DeleteComment(int id);
+    Task UpdateComment(ProjectComment comment);
+    Task<List<ProjectComment>> GetAllComments();
+    Task<ProjectComment> GetCommentById(int id);
+    Task<List<ProjectComment>> GetCommentsByIdProject(int id);
+
 }

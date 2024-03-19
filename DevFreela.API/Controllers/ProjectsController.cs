@@ -6,10 +6,11 @@ using DevFreela.API.Interfaces;
 using DevFreela.API.Models;
 using DevFreela.Application.Commands.Comments;
 using DevFreela.Application.Commands.Projects;
+using DevFreela.Application.Commands.Projects.FinishProject;
+using DevFreela.Application.Commands.Projects.StartProject;
 using DevFreela.Application.Queries.Comments.GetCommentsByIdProjectQuery;
 using DevFreela.Application.Queries.Projects.GetAllProjectsQuery;
 using DevFreela.Application.Queries.Projects.GetProjectByIdQuery;
-using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels.Comment;
 using DevFreela.Application.ViewModels.Project;
 using MediatR;
@@ -23,12 +24,10 @@ namespace DevFreela.API.Controllers
     public class ProjectsController : ControllerBase
     {
 
-        private readonly IProjectService _projectService;
         private readonly IMediator _mediator;
 
-        public ProjectsController(IProjectService projectService, IMediator mediator)
+        public ProjectsController(IMediator mediator)
         {
-            _projectService = projectService;
             _mediator = mediator;
         }
         
@@ -116,14 +115,14 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPut("{id}/start")]
-        public IActionResult Start (int id) {
-            _projectService.Start(id);
+        public async Task<IActionResult> Start (int id) {
+            await _mediator.Send(new StartProjectCommand { Id = id });
             return NoContent();
         }
 
         [HttpPut("{id}/finish")]
-        public IActionResult Finish (int id) {
-            _projectService.Finish(id);
+        public async Task<IActionResult> Finish (int id) {
+            await _mediator.Send(new FinishProjectCommand { Id = id });
             return NoContent();
         }
 

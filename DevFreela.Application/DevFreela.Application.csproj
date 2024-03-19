@@ -7,20 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DevFreela.Core\DevFreela.Core.csproj" />
     <ProjectReference Include="..\DevFreela.Infrastructure\DevFreela.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\Users\" />
-    <Folder Include="Queries\User\GetUserByIdQuery\" />
-    <Folder Include="Queries\User\GetAllUsersQuery\" />
-    <Folder Include="Queries\User\GetUserSkillByIdQuery\" />
-    <Folder Include="Queries\User\GetUserFreelancerProjectsById\" />
-    <Folder Include="Queries\User\GetUserOwnedProjectsById\" />
   </ItemGroup>
 </Project>

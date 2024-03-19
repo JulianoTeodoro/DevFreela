@@ -1,4 +1,6 @@
-﻿using DevFreela.Infrastructure.Persistence;
+﻿using DevFreela.Core.Entities;
+using DevFreela.Core.Repositories;
+using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,21 +13,19 @@ namespace DevFreela.Application.Commands.Comments.UpdateComment
 {
     public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand, Unit>
     {
-        private readonly DevFreelaDbContext _dbContext;
+        private readonly IProjectRepository _projectRepository;
 
-        public UpdateCommentCommandHandler(DevFreelaDbContext dbContext)
+        public UpdateCommentCommandHandler(IProjectRepository projectRepository)
         {
-            _dbContext = dbContext;
+            _projectRepository = projectRepository;
         }
 
         public async Task<Unit> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
         {
-            var comment = await _dbContext.ProjectComments.SingleOrDefaultAsync(p => p.Id == request.Id);
-
-            if (comment == null) return Unit.Value;
+            var comment = await _projectRepository.GetCommentById(request.Id);
 
             comment.Update(request.Content);
-            await _dbContext.SaveChangesAsync();
+            await _projectRepository.UpdateComment(comment);
 
             return Unit.Value;
             

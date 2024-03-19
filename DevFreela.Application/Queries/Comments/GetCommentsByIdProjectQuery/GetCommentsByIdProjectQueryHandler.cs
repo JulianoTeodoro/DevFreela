@@ -1,5 +1,6 @@
 ﻿using DevFreela.Application.ViewModels.Comment;
 using DevFreela.Core.Entities;
+using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,20 +14,21 @@ namespace DevFreela.Application.Queries.Comments.GetCommentsByIdProjectQuery
 {
     public class GetCommentsByIdProjectQueryHandler : IRequestHandler<GetCommentsByIdProjectQuery, List<CommentViewModel>>
     {
-        private readonly DevFreelaDbContext _dbContext;
-        public GetCommentsByIdProjectQueryHandler(DevFreelaDbContext dbContext)
+        private readonly IProjectRepository _repository;
+        public GetCommentsByIdProjectQueryHandler(IProjectRepository repository)
         {
-            _dbContext = dbContext;
+            _repository = repository;
         }
         public async Task<List<CommentViewModel>> Handle(GetCommentsByIdProjectQuery request, CancellationToken cancellationToken)
         {
 
-            var project = await _dbContext.ProjectComments.Where(p => p.IdProject == request.Id)
-                .Include(p => p.User)
-                .Select(p => new CommentViewModel(p.Id, p.Content, p.User.FullName, p.IdProject))
-                .ToListAsync();
+            var project = await _repository.GetCommentsByIdProject(request.Id);
 
-            return project;
+            var viewModel = project
+                .Select(p => new CommentViewModel(p.Id, p.Content, p.User.FullName, p.IdProject))
+                .ToList();
+
+            return viewModel;
 
         }
     }

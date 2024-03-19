@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using DevFreela.Application.Services.Interfaces;
-using DevFreela.Application.Services.Implementations;
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +16,12 @@ using DevFreela.Application.Queries.Comments.GetCommentsByIdProjectQuery;
 using DevFreela.Application.Queries.Skills.GetAllSkillsQuery;
 using DevFreela.Application.Queries.Skills.GetSkillByIdQuery;
 using DevFreela.Application.Queries.User.GetUserByIdQuery;
+using DevFreela.Application.Queries.User.GetUserSkillByIdQuery;
+using DevFreela.Core.Repositories;
+using DevFreela.Infrastructure.Persistence.Repositories;
+using DevFreela.Application.Commands.Users.CreateUser;
+using DevFreela.Application.Commands.Projects.StartProject;
+using DevFreela.Application.Commands.Projects.FinishProject;
 
 
 namespace DevFreela.Infrastructure
@@ -31,6 +35,8 @@ namespace DevFreela.Infrastructure
                 options => options.UseSqlServer(stringConnection)
             );
             services.AddMediatR(typeof(CreateProjectCommand));
+            services.AddMediatR(typeof(StartProjectCommand));
+            services.AddMediatR(typeof(FinishProjectCommand));
             services.AddMediatR(typeof(CreateCommentCommand));
             services.AddMediatR(typeof(DeleteProjectCommand));
             services.AddMediatR(typeof(UpdateProjectCommand));
@@ -41,8 +47,13 @@ namespace DevFreela.Infrastructure
             services.AddMediatR(typeof(GetAllSkillsQuery));
             services.AddMediatR(typeof(GetSkillByIdQuery));
             services.AddMediatR(typeof(GetUserByIdQuery));
+            services.AddMediatR(typeof(GetUserSkillByIdQuery));
+            services.AddMediatR(typeof(CreateUserCommandHandler));
 
-            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISkillRepository, SkillRepository>();
+
 
             return services;
         }

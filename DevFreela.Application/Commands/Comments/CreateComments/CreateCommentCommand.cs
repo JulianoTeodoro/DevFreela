@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DevFreela.Application.Commands.Comments
 {
-    public class CreateCommentCommand : IRequest<Unit>
+    public class CreateCommentCommand : IRequest<int>
     {
         public string Content { get; set; }
         public int IdProject { get; set; }

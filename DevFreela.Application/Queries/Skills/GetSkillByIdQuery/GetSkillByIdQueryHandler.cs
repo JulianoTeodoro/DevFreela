@@ -1,4 +1,5 @@
 ﻿using DevFreela.Application.ViewModels.Skill;
+using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,20 @@ namespace DevFreela.Application.Queries.Skills.GetSkillByIdQuery
 {
     public class GetSkillByIdQueryHandler : IRequestHandler<GetSkillByIdQuery, SkillViewModel>
     {
-        private readonly DevFreelaDbContext _dbContext;
+        private readonly ISkillRepository _repository;
 
-        public GetSkillByIdQueryHandler(DevFreelaDbContext dbContext)
+        public GetSkillByIdQueryHandler(ISkillRepository repository)
         {
-            _dbContext = dbContext;
+            _repository = repository;
         }
 
         public async Task<SkillViewModel> Handle(GetSkillByIdQuery request, CancellationToken cancellationToken)
         {
-            var skill = await _dbContext.Skills.Select(p => new SkillViewModel(p.Id, p.Description)).Where(p => p.Id == request.Id).SingleOrDefaultAsync();
+            var skill = await _repository.GetById(request.Id);
 
-            return skill;
+            var skillViewModel = new SkillViewModel(skill.Id, skill.Description);
+
+            return skillViewModel;
         }
     }
 }
