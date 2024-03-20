@@ -22,7 +22,11 @@ using DevFreela.Infrastructure.Persistence.Repositories;
 using DevFreela.Application.Commands.Users.CreateUser;
 using DevFreela.Application.Commands.Projects.StartProject;
 using DevFreela.Application.Commands.Projects.FinishProject;
-
+using DevFreela.Core.Services;
+using DevFreela.Infrastructure.Auth;
+using DevFreela.Application.Commands.Users.LoginUser;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DevFreela.Infrastructure
 {
@@ -48,12 +52,13 @@ namespace DevFreela.Infrastructure
             services.AddMediatR(typeof(GetSkillByIdQuery));
             services.AddMediatR(typeof(GetUserByIdQuery));
             services.AddMediatR(typeof(GetUserSkillByIdQuery));
-            services.AddMediatR(typeof(CreateUserCommandHandler));
+            services.AddMediatR(typeof(CreateUserCommand));
+            services.AddMediatR(typeof(LoginUserCommand));
 
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISkillRepository, SkillRepository>();
-
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }

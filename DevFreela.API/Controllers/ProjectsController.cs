@@ -14,6 +14,7 @@ using DevFreela.Application.Queries.Projects.GetProjectByIdQuery;
 using DevFreela.Application.ViewModels.Comment;
 using DevFreela.Application.ViewModels.Project;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -21,6 +22,7 @@ namespace DevFreela.API.Controllers
 {
     [ApiController]
     [Route("api/projects")]
+    [Authorize(Roles = "admin")]
     public class ProjectsController : ControllerBase
     {
 

@@ -21,12 +21,10 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
         public async Task<User> Create(User entity)
         {
-            var user = new User(entity.FullName, entity.Email, entity.BirthDate);
-
-            await _dbContext.Users.AddAsync(user);
+            await _dbContext.Users.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
-            return user;
+            return entity;
         }
 
         public async Task Delete(int id)
@@ -59,6 +57,14 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
             return user;
         }
+
+        public async Task<User> GetByEmailAndPassword(string email, string passwordHash)
+        {
+            return await _dbContext.Users
+                .Where(p => p.Email == email && p.Password == passwordHash)
+                .SingleOrDefaultAsync();
+        }
+
 
         public async Task<List<UserSkill>> GetSkillAsync(int id)
         {

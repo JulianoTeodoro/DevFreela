@@ -10,5 +10,6 @@ namespace DevFreela.Core.Repositories
     public interface IUserRepository : IRepository<User>
     {
         Task<List<UserSkill>> GetSkillAsync(int id);
+        Task<User> GetByEmailAndPassword(string email, string passwordHash);
     }
 }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevFreela.API.Models;
+using DevFreela.Application.Commands.Users.CreateUser;
+using DevFreela.Application.Commands.Users.LoginUser;
 using DevFreela.Application.Queries.User.GetUserByIdQuery;
-using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels.User;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -31,17 +32,20 @@ namespace DevFreela.API.Controllers
 
         
         [HttpPost]
-        public IActionResult Post([FromBody] CreateUserModel createUserModel) {
-            if (createUserModel.userName.Length > 50) {
-                return BadRequest();
-            }
+        public async Task<IActionResult> Register([FromBody] CreateUserCommand createUserModel) {
 
-            return CreatedAtAction(nameof(GetById), new { id = 1 }, createUserModel);
+            var user = await _mediator.Send(createUserModel);
+
+            return CreatedAtAction(nameof(GetById), new { id = user }, createUserModel);
         }
 
-        [HttpPut("{id}/login")]
-        public IActionResult Login(int id, [FromBody] LoginModel login) {
-            return NoContent();
+        [HttpPut("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserCommand login) {
+            var loginUserViewModel = await _mediator.Send(login);
+
+            if (loginUserViewModel == null) return BadRequest();
+
+            return Ok(loginUserViewModel);
         }
     }
 }
